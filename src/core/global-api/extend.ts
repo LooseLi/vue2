@@ -18,8 +18,10 @@ export function initExtend(Vue: GlobalAPI) {
    */
   Vue.extend = function (extendOptions: any): typeof Component {
     extendOptions = extendOptions || {}
+    // Vue 构造函数
     const Super = this
     const SuperId = Super.cid
+    // 从缓存中加载组件的构造函数
     const cachedCtors = extendOptions._Ctor || (extendOptions._Ctor = {})
     if (cachedCtors[SuperId]) {
       return cachedCtors[SuperId]
@@ -27,15 +29,19 @@ export function initExtend(Vue: GlobalAPI) {
 
     const name = extendOptions.name || Super.options.name
     if (__DEV__ && name) {
+      // 如果是开发环境，验证组件的名称
       validateComponentName(name)
     }
 
     const Sub = function VueComponent(this: any, options: any) {
+      // 调用_init()初始化
       this._init(options)
     } as unknown as typeof Component
+    // 原型继承自Vue
     Sub.prototype = Object.create(Super.prototype)
     Sub.prototype.constructor = Sub
     Sub.cid = cid++
+    // 合并options
     Sub.options = mergeOptions(Super.options, extendOptions)
     Sub['super'] = Super
 

@@ -17,14 +17,17 @@ const idToTemplate = cached(id => {
   return el && el.innerHTML
 })
 
+// 保留Vue实例的$mount方法
 const mount = Vue.prototype.$mount
 Vue.prototype.$mount = function (
   el?: string | Element,
   hydrating?: boolean
 ): Component {
+  // 获取el对象
   el = el && query(el)
 
   /* istanbul ignore if */
+  // el不能是body或html
   if (el === document.body || el === document.documentElement) {
     __DEV__ &&
       warn(
@@ -35,6 +38,7 @@ Vue.prototype.$mount = function (
 
   const options = this.$options
   // resolve template/el and convert to render function
+  // 把template/el转换成render函数
   if (!options.render) {
     let template = options.template
     if (template) {
