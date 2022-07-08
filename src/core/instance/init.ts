@@ -14,6 +14,8 @@ import { EffectScope } from 'v3/reactivity/effectScope'
 let uid = 0
 
 export function initMixin(Vue: typeof Component) {
+  // 给 Vue 实例增加 init() 方法
+  // 合并options / 初始化操作
   Vue.prototype._init = function (options?: Record<string, any>) {
     const vm: Component = this
     // a uid
@@ -29,12 +31,14 @@ export function initMixin(Vue: typeof Component) {
 
     // a flag to mark this as a Vue instance without having to do instanceof
     // check
+    // 如果是Vue实例则不需要被observe
     vm._isVue = true
     // avoid instances from being observed
     vm.__v_skip = true
     // effect scope
     vm._scope = new EffectScope(true /* detached */)
     // merge options
+    // 合并options
     if (options && options._isComponent) {
       // optimize internal component instantiation
       // since dynamic options merging is pretty slow, and none of the
