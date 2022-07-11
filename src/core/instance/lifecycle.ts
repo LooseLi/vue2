@@ -156,8 +156,8 @@ export function mountComponent(
       ) {
         warn(
           'You are using the runtime-only build of Vue where the template ' +
-            'compiler is not available. Either pre-compile the templates into ' +
-            'render functions, or use the compiler-included build.',
+          'compiler is not available. Either pre-compile the templates into ' +
+          'render functions, or use the compiler-included build.',
           vm
         )
       } else {
@@ -191,6 +191,10 @@ export function mountComponent(
     }
   } else {
     updateComponent = () => {
+      /**
+       * _render: 返回虚拟DOM
+       * _update: 将虚拟DOM转换成真实DOM
+       */
       vm._update(vm._render(), hydrating)
     }
   }
