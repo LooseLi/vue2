@@ -59,13 +59,23 @@ export function initMixin(Vue: typeof Component) {
     }
     // expose real self
     vm._self = vm
+    // vm的生命周期相关变量初始化
+    // $children/$parent/$root/$refs
     initLifecycle(vm)
+    // vm的事件监听初始化。父组件绑定在当前组件上的事件
     initEvents(vm)
+    // vm的编译render初始化
+    // $slots/$attrs/$listeners/$scopedSlots/_c/$createElement
     initRender(vm)
+    // beforeCreate生命钩子的回调
     callHook(vm, 'beforeCreate')
+    // 把inject的成员注入到vm上
     initInjections(vm) // resolve injections before data/props
+    // 初始化vm的_props/methods/_data/computed/watch
     initState(vm)
+    // 初始化provide
     initProvide(vm) // resolve provide after data/props
+    // created生命钩子的回调
     callHook(vm, 'created')
 
     /* istanbul ignore if */

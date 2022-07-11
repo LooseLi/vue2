@@ -13,8 +13,10 @@ export function initEvents(vm: Component) {
   vm._events = Object.create(null)
   vm._hasHookEvent = false
   // init parent attached events
+  // 获取父元素上附加的事件
   const listeners = vm.$options._parentListeners
   if (listeners) {
+    // 注册自定义事件
     updateComponentListeners(vm, listeners)
   }
 }
@@ -68,7 +70,7 @@ export function eventsMixin(Vue: typeof Component) {
         vm.$on(event[i], fn)
       }
     } else {
-      ;(vm._events[event] || (vm._events[event] = [])).push(fn)
+      ; (vm._events[event] || (vm._events[event] = [])).push(fn)
       // optimize hook:event cost by using a boolean flag marked at registration
       // instead of a hash lookup
       if (hookRE.test(event)) {
@@ -135,14 +137,14 @@ export function eventsMixin(Vue: typeof Component) {
       if (lowerCaseEvent !== event && vm._events[lowerCaseEvent]) {
         tip(
           `Event "${lowerCaseEvent}" is emitted in component ` +
-            `${formatComponentName(
-              vm
-            )} but the handler is registered for "${event}". ` +
-            `Note that HTML attributes are case-insensitive and you cannot use ` +
-            `v-on to listen to camelCase events when using in-DOM templates. ` +
-            `You should probably use "${hyphenate(
-              event
-            )}" instead of "${event}".`
+          `${formatComponentName(
+            vm
+          )} but the handler is registered for "${event}". ` +
+          `Note that HTML attributes are case-insensitive and you cannot use ` +
+          `v-on to listen to camelCase events when using in-DOM templates. ` +
+          `You should probably use "${hyphenate(
+            event
+          )}" instead of "${event}".`
         )
       }
     }
