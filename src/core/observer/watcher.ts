@@ -109,8 +109,8 @@ export default class Watcher implements DepTarget {
         __DEV__ &&
           warn(
             `Failed watching path: "${expOrFn}" ` +
-              'Watcher only accepts simple dot-delimited paths. ' +
-              'For full control, use a function instead.',
+            'Watcher only accepts simple dot-delimited paths. ' +
+            'For full control, use a function instead.',
             vm
           )
       }

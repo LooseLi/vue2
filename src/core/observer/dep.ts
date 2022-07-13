@@ -28,6 +28,7 @@ export default class Dep {
     this.subs = []
   }
 
+  // 添加新的订阅者watcher对象
   addSub(sub: DepTarget) {
     this.subs.push(sub)
   }
@@ -36,7 +37,9 @@ export default class Dep {
     remove(this.subs, sub)
   }
 
+  // 将观察对象和watcher建立依赖
   depend(info?: DebuggerEventExtraInfo) {
+    // 如果target存在，把dep对象添加到watcher的依赖中
     if (Dep.target) {
       Dep.target.addDep(this)
       if (__DEV__ && info && Dep.target.onTrack) {

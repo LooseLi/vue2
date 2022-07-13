@@ -182,6 +182,7 @@ export function defineReactive(
       const value = getter ? getter.call(obj) : val
       /**
        * 收集依赖
+       * 如果存在当前依赖目标，即watcher对象，则建立依赖
        */
       if (Dep.target) {
         if (__DEV__) {
@@ -193,8 +194,10 @@ export function defineReactive(
         } else {
           dep.depend()
         }
+        // 如果子观察目标存在，则建立子对象的依赖关系
         if (childOb) {
           childOb.dep.depend()
+          // 如果属性是数组，则特殊处理收集数组对象依赖
           if (isArray(value)) {
             dependArray(value)
           }
