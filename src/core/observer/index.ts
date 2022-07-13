@@ -140,6 +140,7 @@ export function observe(
 /**
  * Define a reactive property on an Object.
  */
+// 为一个对象定义一个响应式的属性
 export function defineReactive(
   obj: object,
   key: string,
@@ -148,13 +149,16 @@ export function defineReactive(
   shallow?: boolean,
   mock?: boolean
 ) {
+  // 创建依赖对象实例
   const dep = new Dep()
 
+  // 获取obj的属性描述符对象
   const property = Object.getOwnPropertyDescriptor(obj, key)
   if (property && property.configurable === false) {
     return
   }
 
+  // 提供预定义的存取器函数
   // cater for pre-defined getter/setters
   const getter = property && property.get
   const setter = property && property.set
@@ -165,12 +169,20 @@ export function defineReactive(
     val = obj[key]
   }
 
+  // 判断是否递归观察子对象，并将子对象属性都转换成getter/setter，并返回子观察对象
   let childOb = !shallow && observe(val, false, mock)
   Object.defineProperty(obj, key, {
     enumerable: true,
     configurable: true,
     get: function reactiveGetter() {
+      /**
+       * 如果存在预定义的getter，则value = getter调用的返回值
+       * 否则value = 属性值
+       */
       const value = getter ? getter.call(obj) : val
+      /**
+       * 收集依赖
+       */
       if (Dep.target) {
         if (__DEV__) {
           dep.depend({
@@ -188,9 +200,11 @@ export function defineReactive(
           }
         }
       }
+      // 返回属性值
       return isRef(value) && !shallow ? value.value : value
     },
     set: function reactiveSetter(newVal) {
+      // 同getter
       const value = getter ? getter.call(obj) : val
       if (!hasChanged(value, newVal)) {
         return
@@ -209,7 +223,9 @@ export function defineReactive(
       } else {
         val = newVal
       }
+      // 如果新值是对象，继续转换成getter/setter，并返回observer对象
       childOb = !shallow && observe(newVal, false, mock)
+      // 派发更新(发布通知)
       if (__DEV__) {
         dep.notify({
           type: TriggerOpTypes.SET,
