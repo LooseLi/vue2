@@ -47,19 +47,24 @@ const mockDep = {
  * collect dependencies and dispatch updates.
  */
 export class Observer {
+  // 依赖对象
   dep: Dep
+  // 实例计数器
   vmCount: number // number of vms that have this object as root $data
 
   constructor(public value: any, public shallow = false, public mock = false) {
     // this.value = value
     this.dep = mock ? mockDep : new Dep()
+    // 初始化实例的vmCount为0
     this.vmCount = 0
+    // 将实例挂载到观察对象的__ob__属性
     def(value, '__ob__', this)
+    // 数组的响应式处理
     if (isArray(value)) {
       if (!mock) {
         if (hasProto) {
           /* eslint-disable no-proto */
-          ;(value as any).__proto__ = arrayMethods
+          ; (value as any).__proto__ = arrayMethods
           /* eslint-enable no-proto */
         } else {
           for (let i = 0, l = arrayKeys.length; i < l; i++) {
@@ -69,6 +74,7 @@ export class Observer {
         }
       }
       if (!shallow) {
+        // 为数组中的每一个对象创建一个observer实例
         this.observeArray(value)
       }
     } else {
@@ -77,8 +83,11 @@ export class Observer {
        * getter/setters. This method should only be called when
        * value type is Object.
        */
+      // 遍历对象中的每一个属性，转换成getter/setter
+      // 获取观察对象的每一个属性
       const keys = Object.keys(value)
       for (let i = 0; i < keys.length; i++) {
+        // 遍历属性，设置为响应式数据
         const key = keys[i]
         defineReactive(value, key, NO_INIITIAL_VALUE, undefined, shallow, mock)
       }
@@ -107,10 +116,12 @@ export function observe(
   shallow?: boolean,
   ssrMockReactivity?: boolean
 ): Observer | void {
+  // 判断value是否是对象
   if (!isObject(value) || isRef(value) || value instanceof VNode) {
     return
   }
   let ob: Observer | void
+  // 如果value有__ob__(observer对象)属性，则结束
   if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
     ob = value.__ob__
   } else if (
@@ -120,6 +131,7 @@ export function observe(
     Object.isExtensible(value) &&
     !value.__v_skip /* ReactiveFlags.SKIP */
   ) {
+    // 创建一个Observer对象
     ob = new Observer(value, shallow, ssrMockReactivity)
   }
   return ob
@@ -254,7 +266,7 @@ export function set(
     __DEV__ &&
       warn(
         'Avoid adding reactive properties to a Vue instance or its root $data ' +
-          'at runtime - declare it upfront in the data option.'
+        'at runtime - declare it upfront in the data option.'
       )
     return val
   }
@@ -297,7 +309,7 @@ export function del(target: any[] | object, key: any) {
     __DEV__ &&
       warn(
         'Avoid deleting properties on a Vue instance or its root $data ' +
-          '- just set it to null.'
+        '- just set it to null.'
       )
     return
   }
