@@ -103,6 +103,8 @@ export default class Watcher implements DepTarget {
     if (isFunction(expOrFn)) {
       this.getter = expOrFn
     } else {
+      // expOrFn是字符串的时候，例如watch:{ 'person.name': function... }
+      // parsePath('person.name')返回一个函数获取person.name的值
       this.getter = parsePath(expOrFn)
       if (!this.getter) {
         this.getter = noop
